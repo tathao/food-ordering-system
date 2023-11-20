@@ -1,0 +1,9 @@
+package com.food.ordering.system.common.domain.valueobject;
+
+import java.util.UUID;
+
+public class CustomerId extends BaseId<UUID>{
+    public CustomerId(final UUID value) {
+        super(value);
+    }
+}
