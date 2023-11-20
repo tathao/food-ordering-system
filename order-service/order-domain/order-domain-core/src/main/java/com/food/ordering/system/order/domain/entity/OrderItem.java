@@ -13,8 +13,8 @@ public class OrderItem extends BaseEntity<OrderItemId> {
 
     private OrderId orderId;
     private final int quantity;
-    private final Product product;
-    private final Money amount;
+    private Product product;
+    private  Money amount;
 
     private OrderItem(final OrderItemBuilder builder) {
         super.setId(builder.orderItemId);
@@ -27,14 +27,15 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         return new OrderItemBuilder();
     }
 
-    void initializeOrderItem(final OrderId id, final OrderItemId orderItemId) {
+    void initializeOrderItem(final OrderId id, final OrderItemId orderItemId, Product product) {
         this.orderId = id;
         super.setId(orderItemId);
+        this.product = product;
         calculationAmount();
     }
 
     private void calculationAmount() {
-        this.amount.add(product.getPrice().multiply(quantity));
+        this.amount= product.getPrice().multiply(quantity);
     }
 
     @Setter

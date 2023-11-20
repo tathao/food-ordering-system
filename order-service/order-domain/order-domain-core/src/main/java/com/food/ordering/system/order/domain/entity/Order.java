@@ -11,7 +11,11 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Getter
 public class Order extends AggregateRoot<OrderId> {
@@ -25,7 +29,7 @@ public class Order extends AggregateRoot<OrderId> {
     private TrackingId trackingId;
     private OrderStatus orderStatus;
     private List<String> failureMessages;
-    public static final String FAILURE_MESSAGE_DELIMITER = ",";
+
 
     private Order(final OrderBuilder builder) {
         super.setId(builder.orderId);
@@ -49,24 +53,32 @@ public class Order extends AggregateRoot<OrderId> {
         }
     }
 
-    public void initializeOrder(long theLastOfOrderItemId) {
+    public void initializeOrder(long theLastOfOrderItemId, final List<Product> products) {
         setId(new OrderId(UUID.randomUUID()));
         trackingId = new TrackingId(UUID.randomUUID());
         orderStatus = OrderStatus.PENDING;
-        initializeOrderItems(theLastOfOrderItemId);
+        initializeOrderItems(theLastOfOrderItemId, products);
         calculationTotalAmount();
     }
 
     private void calculationTotalAmount() {
-        this.totalAmount.add(items.stream().map(OrderItem::getAmount)
-                .reduce(Money.ZERO, Money::add));
+        this.totalAmount =items.stream().map(OrderItem::getAmount)
+                .reduce(Money.ZERO, Money::add);
     }
 
-    private void initializeOrderItems(long theLastOfOrderItemId) {
-        ++theLastOfOrderItemId;
-        for (OrderItem orderItem: items) {
-            orderItem.initializeOrderItem(super.getId(), new OrderItemId(theLastOfOrderItemId++));
-        }
+    private void initializeOrderItems(long theLastOfOrderItemId, List<Product> products) {
+        AtomicLong idx = new AtomicLong(theLastOfOrderItemId + 1);
+        Map<ProductId, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+        items.forEach(orderItem -> {
+            Product itemProduct = orderItem.getProduct();
+            if (itemProduct != null) {
+                ProductId productId = itemProduct.getId();
+                if (productId != null && productMap.containsKey(productId)) {
+                    orderItem.initializeOrderItem(super.getId(), new OrderItemId(idx.getAndIncrement()), productMap.get(productId));
+                }
+            }
+        });
     }
 
     @Setter

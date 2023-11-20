@@ -11,6 +11,11 @@ import lombok.experimental.Accessors;
 public class Product extends BaseEntity<ProductId> {
     public String name;
     public Money price;
+
+    public Product(final ProductId productId) {
+        super.setId(productId);
+    }
+
     private Product(final ProductBuilder builder) {
         super.setId(builder.productId);
         name = builder.name;
