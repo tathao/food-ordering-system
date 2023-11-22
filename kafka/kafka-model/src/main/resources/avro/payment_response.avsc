@@ -32,6 +32,13 @@
       }
     },
     {
+      "name": "customerId",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
       "name": "createdAt",
       "type": {
         "type": "long",

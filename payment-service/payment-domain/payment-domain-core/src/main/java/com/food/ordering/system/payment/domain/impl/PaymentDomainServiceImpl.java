@@ -13,6 +13,7 @@ import com.food.ordering.system.payment.domain.valueobject.CreditHistoryId;
 import com.food.ordering.system.payment.domain.valueobject.TransactionType;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -30,7 +31,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
         payment.initializePayment();
         validateCreditEntry(payment, credit, failureMessages);
         subtractCreditEntry(payment, credit);
-        updateCreditHistory(payment, creditHistories, TransactionType.CREDIT);
+        updateCreditHistory(payment, creditHistories);
 
         if (failureMessages.isEmpty()) {
             log.info("Payment is initiated for order id: {}", payment.getOrderId().getValue());
@@ -42,12 +43,13 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
         return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(UTC)), failureMessages, paymentFailedEventDomainEventPublisher);
     }
 
-    private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories, TransactionType transactionType) {
+
+    private void updateCreditHistory(Payment payment, List<CreditHistory> creditHistories) {
         CreditHistory creditHistory = CreditHistory.builder()
                 .creditHistoryId(new CreditHistoryId(UUID.randomUUID()))
                 .customerId(payment.getCustomerId())
                 .amount(payment.getAmount())
-                .transactionType(transactionType)
+                .transactionType(TransactionType.CREDIT)
                 .build();
         creditHistories.add(creditHistory);
     }

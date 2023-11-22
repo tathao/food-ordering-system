@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderItemJpaRepository extends JpaRepository<OrderItemEntity, Long> {
 
-    @Query("SELECT oItem.id FROM OrderItemEntity oItem ORDER BY oItem.id DESC ")
+    @Query("SELECT MAX(oItem.id) FROM OrderItemEntity oItem")
     Long theLastOfOrderItemId();
 }

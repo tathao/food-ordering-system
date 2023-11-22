@@ -8,7 +8,9 @@ import com.food.ordering.system.payment.domain.event.PaymentCompletedEvent;
 import com.food.ordering.system.payment.domain.event.PaymentEvent;
 import com.food.ordering.system.payment.domain.event.PaymentFailedEvent;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public interface PaymentDomainService {
 
@@ -17,4 +19,5 @@ public interface PaymentDomainService {
                                             List<String> failureMessages,
                                             DomainEventPublisher<PaymentCompletedEvent> paymentCompletedEventDomainEventPublisher,
                                             DomainEventPublisher<PaymentFailedEvent> paymentFailedEventDomainEventPublisher);
+
 }
