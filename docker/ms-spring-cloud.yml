@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  eureka-service-registry:
+    image: haont25/eureka-service-registry:0.0.1
+    container_name: eureka-service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - ${GLOBAL_NETWORK:-ms_cloud}
+
+  config-server-service:
+    image: haont25/config-server-service:0.0.1
+    container_name: config-server-service
+    environment:
+      EUREKA_SERVER_ADDRESS: http://eureka-service-registry:8761/eureka
+    ports:
+      - "8296:8296"
+    healthcheck:
+      test: ["CMD","curl","-f","http://config-server-service:8296/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    depends_on:
+      - eureka-service-registry
+    networks:
+      - ${GLOBAL_NETWORK:-ms_cloud}
+
+  spring-cloud-gateway:
+    image: haont25/spring-cloud-gateway:0.0.1
+    container_name: spring-cloud-gateway
+    ports:
+      - "8290:8290"
+    environment:
+      EUREKA_SERVER_ADDRESS: http://eureka-service-registry:8761/eureka
+      CONFIG_SERVER_URL: http://config-server-service:8296
+      REDIS_HOST: redis
+    healthcheck:
+      test: ["CMD","curl","-f","http://spring-cloud-gateway:8290/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    depends_on:
+      - eureka-service-registry
+      - config-server-service
+    networks:
+      - ${GLOBAL_NETWORK:-ms_cloud}

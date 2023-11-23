@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  elastic-query-web-client:
+    image: ${GROUP_PROJECT_ID}/reactive-elastic-query-service:${SERVICE_VERSION}
+    container_name: reactive-elastic-query-service
+    ports:
+      - "9183:9183"
+    volumes:
+      - "./volumes/service-logs:/workspace/elastic-query-web-client/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9183 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MS_TWITTER_TO_KAFKA=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "SERVER_PORT=9183"
+      - "SPRING_CLOUD_CONFIG_URI=http://cloud-config-server:8888"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
