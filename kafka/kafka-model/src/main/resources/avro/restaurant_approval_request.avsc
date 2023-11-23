@@ -1,7 +1,7 @@
 {
   "namespace": "com.food.ordering.system.kafka.order.avro.model",
   "type": "record",
-  "name": "PaymentResponseAvroModel",
+  "name": "RestaurantApprovalRequestAvroModel",
   "fields": [
     {
       "name": "id",
@@ -12,13 +12,6 @@
     },
     {
       "name": "sagaId",
-      "type": {
-        "type": "string",
-        "logicalType": "uuid"
-      }
-    },
-    {
-      "name": "paymentId",
       "type": {
         "type": "string",
         "logicalType": "uuid"
@@ -39,27 +32,32 @@
       }
     },
     {
+      "name": "restaurantOrderStatus",
+      "type": {
+        "type": "enum",
+        "name": "RestaurantOrderStatus",
+        "symbols": ["PAID"]
+      }
+    },
+    {
+      "name": "products",
+      "type": {
+        "type": "array",
+        "items":{
+          "name":"Product",
+          "type":"record",
+          "fields":[
+            {"name":"id", "type": "string", "logicalType": "uuid"},
+            {"name":"quantity", "type": "int"}
+          ]
+        }
+      }
+    },
+    {
       "name": "createdAt",
       "type": {
         "type": "long",
         "logicalType": "timestamp-millis"
-      }
-    },
-    {
-      "name": "paymentStatus",
-      "type": {
-        "type": "enum",
-        "name": "PaymentStatus",
-        "symbols": ["COMPLETED","CANCELLED","FAILED"]
-      }
-    },
-    {
-      "name": "failureMessages",
-      "type": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
       }
     }
   ]
