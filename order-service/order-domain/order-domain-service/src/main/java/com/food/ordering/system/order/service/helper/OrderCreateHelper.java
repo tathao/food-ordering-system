@@ -44,17 +44,9 @@ public class OrderCreateHelper {
         OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order,
                 theLastOfOrderItemId, productList,
                 orderCreatedEventDomainEventPublisher);
-        saveOrder(order);
+        orderRepository.saveOrder(order);
         log.info("Order is created with id: {}", orderCreatedEvent.getOrder().getId().getValue());
         return orderCreatedEvent;
     }
 
-    private void saveOrder(Order order) {
-        Order orderResult = orderRepository.save(order);
-        if (orderResult == null) {
-            log.error("Could not save order!");
-            throw new OrderDomainException("Could not save order!");
-        }
-        log.info("Order is saved with id: {}", orderResult.getId().getValue());
-    }
 }

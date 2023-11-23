@@ -61,6 +61,13 @@ public class Order extends AggregateRoot<OrderId> {
         calculationTotalAmount();
     }
 
+    public void pay() {
+        if (orderStatus != OrderStatus.PENDING) {
+            throw new OrderDomainException("Order is not in correct state for pay operation!");
+        }
+        orderStatus = OrderStatus.PAID;
+    }
+
     private void calculationTotalAmount() {
         this.totalAmount =items.stream().map(OrderItem::getAmount)
                 .reduce(Money.ZERO, Money::add);
