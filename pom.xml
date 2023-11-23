@@ -21,6 +21,7 @@
         <module>common</module>
         <module>kafka</module>
         <module>payment-service</module>
+        <module>restaurant-service</module>
     </modules>
     <properties>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
@@ -118,6 +119,31 @@
             <dependency>
                 <groupId>com.food.ordering.system</groupId>
                 <artifactId>payment-messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.ordering.system</groupId>
+                <artifactId>restaurant-domain-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.ordering.system</groupId>
+                <artifactId>restaurant-domain-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.ordering.system</groupId>
+                <artifactId>restaurant-container</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.ordering.system</groupId>
+                <artifactId>restaurant-data-access</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.food.ordering.system</groupId>
+                <artifactId>restaurant-messaging</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
