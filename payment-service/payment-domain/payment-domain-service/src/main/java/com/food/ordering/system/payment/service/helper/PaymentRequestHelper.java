@@ -66,6 +66,7 @@ public class PaymentRequestHelper {
                 .orElseThrow(()->{
                     log.error("Could not find credit entry for customer: {}", customerId.getValue());
                     return new PaymentDomainServiceException("Could not find credit entry for customer " + customerId.getValue());
-                });
+                }
+                );
     }
 }

@@ -61,7 +61,6 @@ public class CreditRepositoryImpl implements CreditRepository {
 
     private CreditEntity getCreditEntity(Credit credit) {
         return creditJpaRepository.findByCustomerId(credit.getCustomerId().getValue())
-                .orElseThrow(()-> new PaymentNotFoundException("Cannot find the credit of customer id: "
-                + credit.getCustomerId().getValue()));
+                .orElseGet(()->paymentDataAccessMapper.creditToCreditEntity(credit));
     }
 }

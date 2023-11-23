@@ -15,6 +15,7 @@ import java.util.UUID;
 @Document(collection = "credit")
 public class CreditEntity {
 
+    @Id
     @Field(name = "id")
     private UUID id;
     @Field(name = "customer_id")
