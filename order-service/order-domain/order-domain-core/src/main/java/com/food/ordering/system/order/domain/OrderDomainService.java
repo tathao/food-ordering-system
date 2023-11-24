@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface OrderDomainService {
 
-    OrderCreatedEvent validateAndInitiateOrder(final Order order, long theLastOfOrderItemId, List<Product> products, DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher);
+    OrderCreatedEvent validateAndInitiateOrder(final Order order,  DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher);
     OrderPaidEvent validateAndApprovalTheOrder(final Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher);
 }

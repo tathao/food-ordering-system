@@ -24,8 +24,7 @@ public class Order extends AggregateRoot<OrderId> {
     private final RestaurantId restaurantId;
     private final StreetAddress deliveryAddress;
     private final List<OrderItem> items;
-    @Setter
-    private  Money totalAmount;
+    private final Money totalAmount;
     private TrackingId trackingId;
     private OrderStatus orderStatus;
     private List<String> failureMessages;
@@ -48,17 +47,16 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     public void validateOrder() {
-        if (orderStatus != null || getId() != null) {
-            throw new OrderDomainException("Order is not in correct state for initialization!");
-        }
+        validateInitialOrder();
+        validateTotalPrice();
+        validateItemsPrice();
     }
 
-    public void initializeOrder(long theLastOfOrderItemId, final List<Product> products) {
+    public void initializeOrder() {
         setId(new OrderId(UUID.randomUUID()));
         trackingId = new TrackingId(UUID.randomUUID());
         orderStatus = OrderStatus.PENDING;
-        initializeOrderItems(theLastOfOrderItemId, products);
-        calculationTotalAmount();
+        initializeOrderItems();
     }
 
     public void pay() {
@@ -68,24 +66,42 @@ public class Order extends AggregateRoot<OrderId> {
         orderStatus = OrderStatus.PAID;
     }
 
-    private void calculationTotalAmount() {
-        this.totalAmount =items.stream().map(OrderItem::getAmount)
-                .reduce(Money.ZERO, Money::add);
+    private void validateInitialOrder() {
+        if (orderStatus != null || getId() != null) {
+            throw new OrderDomainException("Order is not in correct state for initialization!");
+        }
     }
 
-    private void initializeOrderItems(long theLastOfOrderItemId, List<Product> products) {
-        AtomicLong idx = new AtomicLong(theLastOfOrderItemId + 1);
-        Map<ProductId, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, Function.identity()));
-        items.forEach(orderItem -> {
-            Product itemProduct = orderItem.getProduct();
-            if (itemProduct != null) {
-                ProductId productId = itemProduct.getId();
-                if (productId != null && productMap.containsKey(productId)) {
-                    orderItem.initializeOrderItem(super.getId(), new OrderItemId(idx.getAndIncrement()), productMap.get(productId));
-                }
-            }
-        });
+    private void validateTotalPrice() {
+        if (totalAmount == null || !totalAmount.isGreaterThanZero()) {
+            throw new OrderDomainException("Total price must be greater than zero!");
+        }
+    }
+
+    private void validateItemsPrice() {
+        Money orderItemsTotal = items.stream().map(orderItem -> {
+            validateItemPrice(orderItem);
+            return orderItem.getSubTotal();
+        }).reduce(Money.ZERO, Money::add);
+
+        if (!totalAmount.equals(orderItemsTotal)) {
+            throw new OrderDomainException("Total price: " + totalAmount.getAmount()
+            + " is not equal to Order item total: " + orderItemsTotal.getAmount() + "!");
+        }
+    }
+
+    private void initializeOrderItems() {
+        long itemId = 1;
+        for (OrderItem orderItem: items) {
+            orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
+        }
+    }
+
+    private void validateItemPrice(OrderItem orderItem) {
+        if (!orderItem.isPriceValid()) {
+            throw new OrderDomainException("Order item price: " + orderItem.getPrice().getAmount() +
+                    " is not valid for product " + orderItem.getProduct().getId().getValue());
+        }
     }
 
     @Setter

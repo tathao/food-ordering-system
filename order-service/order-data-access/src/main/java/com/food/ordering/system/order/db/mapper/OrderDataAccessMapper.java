@@ -4,7 +4,6 @@ import com.food.ordering.system.common.domain.valueobject.*;
 import com.food.ordering.system.order.db.entity.AddressEntity;
 import com.food.ordering.system.order.db.entity.OrderEntity;
 import com.food.ordering.system.order.db.entity.OrderItemEntity;
-import com.food.ordering.system.order.db.entity.ProductEntity;
 import com.food.ordering.system.order.domain.entity.Order;
 import com.food.ordering.system.order.domain.entity.OrderItem;
 import com.food.ordering.system.order.domain.entity.Product;
@@ -22,14 +21,6 @@ import static com.food.ordering.system.common.domain.constant.DomainConstant.FAI
 
 @Component
 public class OrderDataAccessMapper {
-
-    public Product productEntityToProduct(ProductEntity entity){
-        return Product.builder()
-                .productId(new ProductId(entity.getId()))
-                .name(entity.getName())
-                .price(new Money(entity.getPrice()))
-                .build();
-    }
 
     public OrderEntity orderToOrderEntity(Order order) {
         OrderEntity orderEntity = OrderEntity.builder()
@@ -70,9 +61,9 @@ public class OrderDataAccessMapper {
         return orderItems.stream().map(
                 orderItemEntity -> OrderItem.builder()
                         .orderItemId(new OrderItemId(orderItemEntity.getId()))
-                        .amount(new Money(orderItemEntity.getSubTotal()))
+                        .subTotal(new Money(orderItemEntity.getSubTotal()))
                         .quantity(orderItemEntity.getQuantity())
-                        .product(productEntityToProduct(orderItemEntity.getProduct()))
+                        .product(new Product(new ProductId(orderItemEntity.getProductId())))
                         .build()
         ).collect(Collectors.toList());
     }
@@ -82,25 +73,13 @@ public class OrderDataAccessMapper {
     }
 
     private List<OrderItemEntity> orderItemsToOrderItemEntities(List<OrderItem> items) {
-        List<OrderItemEntity> orderItemEntities = items.stream().map(item -> OrderItemEntity.builder()
+        return items.stream().map(item -> OrderItemEntity.builder()
                 .id(item.getId().getValue())
                 .quantity(item.getQuantity())
-                .subTotal(item.getAmount().getAmount())
-                .product(productToProductEntity(item.getProduct()))
+                .subTotal(item.getSubTotal().getAmount())
+                .productId(item.getProduct().getId().getValue())
                 .build()).toList();
-        orderItemEntities.forEach(orderItemEntity -> {
-            ProductEntity productEntity = orderItemEntity.getProduct();
-            productEntity.setOrderEntity(orderItemEntities);
-        });
-        return orderItemEntities;
-    }
 
-    private ProductEntity productToProductEntity(Product product) {
-        return ProductEntity.builder()
-                .id(product.getId().getValue())
-                .price(product.getPrice().getAmount())
-                .name(product.getName())
-                .build();
     }
 
     private AddressEntity deliveryAddressToAddressEntity(StreetAddress deliveryAddress) {

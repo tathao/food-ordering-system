@@ -17,9 +17,9 @@ import static com.food.ordering.system.common.domain.constant.DomainConstant.UTC
 @Slf4j
 public class OrderDomainServiceImpl implements OrderDomainService {
     @Override
-    public OrderCreatedEvent validateAndInitiateOrder(final Order order, long theLastOfOrderItemId, final List<Product> products, DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher) {
+    public OrderCreatedEvent validateAndInitiateOrder(final Order order,  DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher) {
         order.validateOrder();
-        order.initializeOrder(theLastOfOrderItemId, products);
+        order.initializeOrder();
         log.info("Order with id: {} is initiated", order.getId().getValue());
         return new OrderCreatedEvent(order, ZonedDateTime.now(ZoneId.of(UTC)), orderCreatedEventDomainEventPublisher);
     }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ public class CreateOrderRequest {
     private final UUID customerId;
     @NotNull
     private final UUID restaurantId;
+    @NotNull
+    private final BigDecimal total;
     @NotNull
     private final List<OrderItem> items;
     @NotNull

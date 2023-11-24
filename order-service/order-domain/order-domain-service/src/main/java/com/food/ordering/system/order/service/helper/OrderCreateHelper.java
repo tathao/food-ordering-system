@@ -26,8 +26,6 @@ import java.util.UUID;
 public class OrderCreateHelper {
 
     private final OrderDataMapper orderDataMapper;
-    private final ProductRepository productRepository;
-    private final OrderItemRepository orderItemRepository;
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
     private final OrderCreatePaymentRequestMessagePublisher orderCreatedEventDomainEventPublisher;
@@ -35,14 +33,9 @@ public class OrderCreateHelper {
 
     @Transactional
     public OrderCreatedEvent persistOrder(CreateOrderRequest createOrderRequest) {
-        List<UUID> productIds = createOrderRequest.getItems().stream().map(OrderItem::getProductId).toList();
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderRequest);
-        List<Product> productList = productRepository.findProductsByIdIn(productIds).orElseThrow(
-                ()-> new OrderDomainException("Could not find products!")
-        );
-        long theLastOfOrderItemId = orderItemRepository.theLastOfOrderItemId();
+
         OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order,
-                theLastOfOrderItemId, productList,
                 orderCreatedEventDomainEventPublisher);
         orderRepository.saveOrder(order);
         log.info("Order is created with id: {}", orderCreatedEvent.getOrder().getId().getValue());

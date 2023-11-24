@@ -54,6 +54,15 @@
       }
     },
     {
+      "name": "price",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 10,
+        "scale": 2
+      }
+    },
+    {
       "name": "createdAt",
       "type": {
         "type": "long",

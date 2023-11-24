@@ -1,6 +1,7 @@
 package com.food.ordering.system.order.service.mapper;
 
 import com.food.ordering.system.common.domain.valueobject.CustomerId;
+import com.food.ordering.system.common.domain.valueobject.Money;
 import com.food.ordering.system.common.domain.valueobject.ProductId;
 import com.food.ordering.system.common.domain.valueobject.RestaurantId;
 import com.food.ordering.system.order.domain.entity.Order;
@@ -22,6 +23,7 @@ public class OrderDataMapper {
         return Order.builder()
                 .customerId(new CustomerId(createOrderRequest.getCustomerId()))
                 .restaurantId(new RestaurantId(createOrderRequest.getRestaurantId()))
+                .totalAmount(new Money(createOrderRequest.getTotal()))
                 .deliveryAddress(orderAddressToStreetAddress(createOrderRequest.getOrderAddress()))
                 .items(orderItemsToOrderItemEntities(createOrderRequest.getItems()))
                 .build();
@@ -31,6 +33,8 @@ public class OrderDataMapper {
         return items.stream()
                 .map(orderItem -> OrderItem.builder()
                         .product(new Product(new ProductId(orderItem.getProductId())))
+                        .price(new Money(orderItem.getPrice()))
+                        .subTotal(new Money(orderItem.getSubTotal()))
                         .quantity(orderItem.getQuantity())
                         .build()).collect(Collectors.toList());
     }
