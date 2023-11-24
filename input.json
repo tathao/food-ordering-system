@@ -1,0 +1,19 @@
+{
+  "customerId": "d215b5f8-0249-4dc5-89a3-51fd148cfb41",
+  "restaurantId": "d215b5f8-0249-4dc5-89a3-51fd148cfb45",
+  "orderAddress": {
+    "street": "street_1",
+    "postalCode": "1000AB",
+    "city": "Amsterdam"
+  },
+  "items": [
+    {
+      "productId": "03a1a44c-97d7-4fa5-898c-85e14b7bb682",
+      "quantity": 1
+    },
+    {
+      "productId": "3701d628-4c5b-44ca-a320-a672730af6ea",
+      "quantity": 3
+    }
+  ]
+}
