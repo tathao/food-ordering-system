@@ -23,21 +23,6 @@ CREATE TABLE "order".orders
     CONSTRAINT orders_pkey PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS "order".order_product CASCADE;
-
-CREATE TABLE "order".order_product
-(
-    id               uuid           NOT NULL,
-    price            numeric(10, 2) NOT NULL,
-    name character varying COLLATE pg_catalog."default",
-    CONSTRAINT order_product_pkey PRIMARY KEY (id)
-);
-
-INSERT INTO "order".order_product(
-	id, price, name)
-	VALUES ('8ae4fbf4-463d-4f95-b589-81ff462f01c7', 15.00, 'Pizza'),('3701d628-4c5b-44ca-a320-a672730af6ea', 10.00, 'KFC'),('03a1a44c-97d7-4fa5-898c-85e14b7bb682', 5.00, 'Hamburger');
-
-
 DROP TABLE IF EXISTS "order".order_items CASCADE;
 
 CREATE TABLE "order".order_items
@@ -45,16 +30,14 @@ CREATE TABLE "order".order_items
     id         bigint         NOT NULL,
     order_id   uuid           NOT NULL,
     product_id uuid           NOT NULL,
+    price      numeric(10,2)  NOT NULL,
     quantity   integer        NOT NULL,
-    amount  numeric(10, 2) NOT NULL,
+    sub_total  numeric(10, 2) NOT NULL,
     CONSTRAINT order_items_pkey PRIMARY KEY (id, order_id)
 );
 
 ALTER TABLE "order".order_items
     ADD CONSTRAINT "FK_ORDER_ID" FOREIGN KEY (order_id) REFERENCES "order".orders (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE NOT VALID;
-
-ALTER TABLE "order".order_items
-    ADD CONSTRAINT "FK_PROD_ID" FOREIGN KEY (product_id) REFERENCES "order".order_product (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE NOT VALID;
 
 DROP TABLE IF EXISTS "order".order_address CASCADE;
 
