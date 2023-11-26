@@ -5,6 +5,7 @@ import com.food.ordering.system.common.domain.valueobject.Money;
 import com.food.ordering.system.payment.domain.entity.Credit;
 import com.food.ordering.system.payment.domain.valueobject.CreditId;
 import com.food.ordering.system.payment.service.PaymentDomainApplicationService;
+import com.food.ordering.system.payment.service.dto.CustomerRequest;
 import com.food.ordering.system.payment.service.dto.PaymentRequest;
 import com.food.ordering.system.payment.service.ports.input.message.listener.PaymentRequestMessageListener;
 import com.food.ordering.system.payment.service.ports.output.repository.CreditRepository;
@@ -29,10 +30,13 @@ public class PaymentDomainApplicationServiceImpl implements PaymentDomainApplica
     }
 
     @Override
-    public String creditPayment(PaymentRequest paymentRequest) {
+    public String creditPayment(CustomerRequest customerRequest) {
         Credit credit = Credit.builder()
                 .creditEntryId(new CreditId(UUID.randomUUID()))
-                .customerId(new CustomerId(UUID.fromString("d215b5f8-0249-4dc5-89a3-51fd148cfb41")))
+                .customerId(new CustomerId(UUID.fromString(customerRequest.getCustomerId())))
+                .firstName(customerRequest.getFirstName())
+                .lastName(customerRequest.getLastName())
+                .active(true)
                 .totalCreditAmount(new Money(BigDecimal.valueOf(1000.50)))
                 .build();
          creditRepository.save(credit);

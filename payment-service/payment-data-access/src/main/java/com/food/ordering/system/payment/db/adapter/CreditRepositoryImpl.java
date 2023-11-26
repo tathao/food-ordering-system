@@ -40,8 +40,6 @@ public class CreditRepositoryImpl implements CreditRepository {
 
         try {
             CreditEntity creditEntity = getCreditEntity(credit);
-            creditEntity.setTotalCreditAmount(credit.getTotalCreditAmount().getAmount());
-
             creditJpaRepository.save(creditEntity);
 
             CreditEntity savedCreditEntity = creditJpaRepository.findById(creditEntity.getId())

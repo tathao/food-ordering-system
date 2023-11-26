@@ -20,6 +20,12 @@ public class CreditEntity {
     private UUID id;
     @Field(name = "customer_id")
     private UUID customerId;
+    @Field(name = "first_name")
+    private String firstName;
+    @Field(name = "last_name")
+    private String lastName;
+    @Field(name = "active")
+    private Boolean active = true;
     @Field(name = "total_credit_amount", targetType = FieldType.DECIMAL128)
     private BigDecimal totalCreditAmount;
 }
