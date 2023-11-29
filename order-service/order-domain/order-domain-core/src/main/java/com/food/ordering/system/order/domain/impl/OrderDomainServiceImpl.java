@@ -26,10 +26,19 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderPaidEvent validateAndApprovalTheOrder(Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher) {
+    public OrderPaidEvent payOrder(Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher) {
         order.pay();
         log.info("Order with id: {} is paid", order.getId().getValue());
         return new OrderPaidEvent(order, ZonedDateTime.now(ZoneId.of(UTC)), orderPaidEventDomainEventPublisher);
+    }
+
+    @Override
+    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages, DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher) {
+
+        order.initCancel(failureMessages);
+        log.info("Order payment is cancelling for order id: {}", order.getId().getValue());
+        return new OrderCancelledEvent(order, ZonedDateTime.now(ZoneId.of(UTC)),
+                orderCancelledEventDomainEventPublisher);
     }
 
     @Override
@@ -39,11 +48,10 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages, DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher) {
+    public void cancelOrder(Order order, List<String> failureMessages) {
         order.cancel(failureMessages);
         log.info("Order payment is cancelling for order id: {}", order.getId().getValue());
-        return new OrderCancelledEvent(order, ZonedDateTime.now(ZoneId.of(UTC)),
-                orderCancelledEventDomainEventPublisher);
+
     }
 
 }

@@ -7,10 +7,10 @@ import com.food.ordering.system.order.service.dto.message.PaymentResponse;
 import com.food.ordering.system.order.service.dto.message.RestaurantApprovalResponse;
 import com.food.ordering.system.order.service.dto.track.TrackOrderQuery;
 import com.food.ordering.system.order.service.dto.track.TrackOrderResponse;
-import com.food.ordering.system.order.service.handler.OrderCancelCommandHandler;
 import com.food.ordering.system.order.service.handler.OrderCreateCommandHandler;
 import com.food.ordering.system.order.service.handler.OrderTrackCommandHandler;
-import com.food.ordering.system.order.service.ports.input.message.listener.payment.OrderApprovalMessageListener;
+import com.food.ordering.system.order.service.ports.input.message.listener.payment.PaymentResponseListener;
+import com.food.ordering.system.order.service.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,9 @@ import org.springframework.validation.annotation.Validated;
 public class OrderApplicationServiceImpl implements OrderApplicationService {
 
     private final OrderCreateCommandHandler orderCreateCommandHandler;
-    private final OrderCancelCommandHandler orderCancelCommandHandler;
     private final OrderTrackCommandHandler orderTrackCommandHandler;
-    private final OrderApprovalMessageListener orderApprovalMessageListener;
+    private final PaymentResponseListener paymentResponseListener;
+    private final RestaurantApprovalResponseMessageListener restaurantApprovalResponseMessageListener;
 
     @Override
     public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest) {
@@ -34,17 +34,17 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
 
     @Override
     public void orderApprovalToRestaurant(PaymentResponse paymentResponse) {
-        orderApprovalMessageListener.orderApprovalToRestaurant(paymentResponse);
+        paymentResponseListener.paymentComplete(paymentResponse);
     }
 
     @Override
     public void orderApproved(RestaurantApprovalResponse restaurantApprovalResponse) {
-        orderApprovalMessageListener.orderApproved(restaurantApprovalResponse);
+        restaurantApprovalResponseMessageListener.orderApproved(restaurantApprovalResponse);
     }
 
     @Override
     public void orderRejected(RestaurantApprovalResponse restaurantApprovalResponse) {
-
+        restaurantApprovalResponseMessageListener.orderRejected(restaurantApprovalResponse);
     }
 
     @Override
@@ -54,6 +54,6 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
 
     @Override
     public void paymentCancelled(PaymentResponse paymentResponse) {
-        orderCancelCommandHandler.cancelOrderPayment(paymentResponse);
+        paymentResponseListener.paymentCancelled(paymentResponse);
     }
 }

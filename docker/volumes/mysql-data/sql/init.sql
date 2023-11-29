@@ -22,7 +22,7 @@ CREATE table if not exists order_approval (
 	id binary(16) PRIMARY KEY,
     order_id binary(16) NOT NULL,
 	restaurant_id binary(16) NOT NULL,
-	approoval_status enum('APPROVED', 'REJECTED') NOT NULL,
+	approval_status enum('APPROVED', 'REJECTED') NOT NULL,
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
 );
 

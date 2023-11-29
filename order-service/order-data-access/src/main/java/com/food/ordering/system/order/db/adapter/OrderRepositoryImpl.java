@@ -15,6 +15,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.food.ordering.system.common.domain.constant.DomainConstant.FAILURE_MESSAGE_DELIMITER;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +32,8 @@ public class OrderRepositoryImpl implements OrderRepository {
             OrderEntity orderEntity = getOrCreateOrderEntity(order);
             Objects.requireNonNull(orderEntity, "OrderEntity must not be null");
             orderEntity.setOrderStatus(order.getOrderStatus());
+            orderEntity.setFailureMessage(order.getFailureMessages() != null ?
+                    String.join(FAILURE_MESSAGE_DELIMITER, order.getFailureMessages()): "");
             order = orderDataAccessMapper.orderEntityToOrder(orderJpaRepository.save(orderEntity));
             order = Optional.ofNullable(order)
                     .orElseThrow(() -> new OrderDomainException("Could not save order! Order is null after saving."));

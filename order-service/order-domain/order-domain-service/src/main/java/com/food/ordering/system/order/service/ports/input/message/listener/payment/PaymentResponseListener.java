@@ -3,9 +3,10 @@ package com.food.ordering.system.order.service.ports.input.message.listener.paym
 import com.food.ordering.system.order.service.dto.message.PaymentResponse;
 import com.food.ordering.system.order.service.dto.message.RestaurantApprovalResponse;
 
-public interface OrderApprovalMessageListener {
+public interface PaymentResponseListener {
 
-    void orderApprovalToRestaurant(PaymentResponse paymentResponse);
+    void paymentComplete(PaymentResponse paymentResponse);
 
-    void orderApproved(RestaurantApprovalResponse restaurantApprovalResponse);
+    void paymentCancelled(PaymentResponse paymentResponse);
+
 }
