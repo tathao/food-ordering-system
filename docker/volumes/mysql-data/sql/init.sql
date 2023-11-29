@@ -26,13 +26,6 @@ CREATE table if not exists order_approval (
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
 );
 
-CREATE table if not exists order_detail (
-	id binary(16) PRIMARY KEY,
-	order_id binary(16) UNIQUE,
-	order_status enum('PENDING','PAID','APPROVED','CANCELLING','CANCELLED'),
-	FOREIGN KEY (order_id) REFERENCES order_approval(id)
-);
-
 INSERT INTO restaurant_db.restaurant(id, name, active)
 	VALUES(UUID_TO_BIN('d215b5f8-0249-4dc5-89a3-51fd148cfb45'),'Rosetta', true),
 	(UUID_TO_BIN('d215b5f8-0249-4dc5-89a3-51fd148cfb24'),'Stonehenge', false);
