@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  gitlab:
+    image: 'gitlab/gitlab-ce:latest'
+    container_name: gitlab
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      GITLAB_OWNIBUS_CONFIG: |
+        external_url 'http://localhost:8929'
+        postgresql['enable'] = true
+        postgresql['host'] = "postgres"
+        postgresql['port'] = 5432
+        postgresql['database'] = ${POSTGRES_DB}
+        postgresql['username'] = ${POSTGRES_USER}
+        postgresql['password'] = ${POSTGRES_PASSWORD}
+        redis['enable'] = true
+        redis['host'] = "redis"
+        redis['port'] = 6379
+        redis['password'] = ${REDIS_PASSWORD}
+        gitlab_rails['time_zone'] = '${GITLAB_TIMEZONE}'
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = 'smtp.gmail.com'
+        gitlab_rails['smtp_port'] = 587
+        gitlab_rails['smtp_user_name'] = '${GITLAB_EMAIL_FROM}'
+        gitlab_rails['gitlab_email_from'] = '${GITLAB_EMAIL_FROM}'
+        gitlab_rails['gitlab_email_display_name'] = '${GITLAB_EMAIL_DISPLAY_NAME}'
+        gitlab_rails['gitlab_email_reply_to'] = '${GITLAB_EMAIL_REPLY_TO}'
+        gitlab_rails['smtp_password'] = 'HaoNgan12122015'
+        gitlab_rails['smtp_domain'] = 'smtp.gmail.com'
+        gitlab_rails['smtp_authentication'] = 'login'
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_tls'] = false
+        gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_encoding'] = 'utf8'
+        gitlab_rails['db_database'] = ${POSTGRES_DB}
+        gitlab_rails['db_pool'] = 10
+        gitlab_rails['db_username'] = ${POSTGRES_USER}
+        gitlab_rails['db_password'] = ${POSTGRES_PASSWORD}
+        gitlab_rails['db_port'] = '5432'
+        gitlab_rails['redis_host'] = 'redis'
+        gitlab_rails['redis_port'] = '6379'
+        gitlab_rails['redis_password'] = ${REDIS_PASSWORD}
+    ports:
+      - '8929:80'
+      - '8443:443'
+      - '8222:22'
+    networks:
+      - ${GLOBAL_NETWORK}
+    volumes:
+      - "./volumes/gitlab/data:/var/opt/gitlab"
+      - "./volumes/gitlab/logs:/var/log/gitlab"
+      - "./volumes/gitlab/config:/etc/gitlab"

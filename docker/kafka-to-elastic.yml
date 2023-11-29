@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  kafka-to-elastic:
+    image: ${GROUP_PROJECT_ID}/kafka-to-elastic-service:${SERVICE_VERSION}
+    container_name: kafka-to-elastic-service
+    ports:
+      - "9102:9102"
+    volumes:
+      - "./volumes/service-logs:/workspace/kafka-to-elastic-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9102 -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_CLOUD_CONFIG_URI=http://cloud-config-server:8888"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "LOGGING_LEVEL_COM_MS_TWITTER_TO_KAFKA=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+    networks:
+      - ${GLOBAL_NETWORK:-services}

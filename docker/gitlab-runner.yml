@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner
+    environment:
+      RUNNER_NAME: my-runner
+      CI_SERVER_URL: http://localhost:8929/
+      RUNNER_EXECUTOR: docker
+      DOCKER_IMAGE: docker:latest
+      DOCKER_NETWORK_MODE: ${GLOBAL_NETWORK}
+      DOCKER_VOLUMES: '/var/run/docker.sock:/var/run/docker.sock'
+    networks:
+      - ${GLOBAL_NETWORK}
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - "./volumes/gitlab-runner/config:/etc/gitlab-runner"

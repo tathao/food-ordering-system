@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  keycloak-authorization-server:
+    image: ${GROUP_PROJECT_ID}/keycloak:${SERVICE_VERSION:-latest}
+    hostname: keycloak-server
+    ports:
+      - '9091:9091'
+    environment:
+      - "KEYCLOAK_USER=admin"
+      - "KEYCLOAK_STATISTICS=all"
+      - "KEYCLOAK_PASSWORD=admin"
+      - "JAVA_OPTS=-Djboss.http.port=9091"
+      - "DB_VENDOR=MYSQL"
+      - "DB_ADDR=host.docker.internal"
+      - "DB_DATABASE=keycloak"
+      - "DB_USER=haont"
+      - "DB_PASSWORD=haont@123"
+      - "DB_PORT=6033"
+      # - "DB_VENDOR=POSTGRES"
+      # - "DB_ADDR=host.docker.internal"
+      # - "DB_DATABASE=keycloak"
+      # - "DB_USER=keycloak"
+      # - "DB_SCHEMA=keycloak"
+      # - "DB_PASSWORD=keycloak"
+      # - "DB_PORT=5432"
+
+    networks:
+      - ${GLOBAL_NETWORK:-mysql}
+    

@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  cloud-config-server:
+    image: ${GROUP_PROJECT_ID}/cloud-config-server:${SERVICE_VERSION}
+    container_name: cloud-config-server
+    ports:
+      - "8888:8888"
+    volumes:
+      - "./volumes/service-logs:/workspace/cloud-config-server/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8888 -Xms128m -Xmx256m"
+      - "GITHUB_TOKEN=${GITHUB_TOKEN}"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "LOGGING_LEVEL_COM_MS_TWITTER_TO_KAFKA=info"
+      - "LOGGING_LEVEL_ROOT=info"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
