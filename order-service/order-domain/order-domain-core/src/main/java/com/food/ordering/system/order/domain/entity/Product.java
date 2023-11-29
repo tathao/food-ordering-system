@@ -16,6 +16,11 @@ public class Product extends BaseEntity<ProductId> {
         super.setId(productId);
     }
 
+    public Product(final ProductId productId, final Money price) {
+        super.setId(productId);
+        this.price = price;
+    }
+
     private Product(final ProductBuilder builder) {
         super.setId(builder.productId);
         name = builder.name;

@@ -5,6 +5,7 @@ import com.food.ordering.system.order.db.mapper.OrderDataAccessMapper;
 import com.food.ordering.system.order.db.repository.OrderJpaRepository;
 import com.food.ordering.system.order.domain.entity.Order;
 import com.food.ordering.system.order.domain.exception.OrderDomainException;
+import com.food.ordering.system.order.domain.valueobject.TrackingId;
 import com.food.ordering.system.order.service.ports.output.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderDataAccessMapper orderDataAccessMapper;
     @Override
-    public Order saveOrder(Order order) {
+    public void saveOrder(Order order) {
         Objects.requireNonNull(order, "Order must not be null");
         Objects.requireNonNull(orderJpaRepository, "OrderJpaRepository must not be null");
         Objects.requireNonNull(orderDataAccessMapper, "OrderDataAccessMapper must not be null");
@@ -37,7 +38,6 @@ public class OrderRepositoryImpl implements OrderRepository {
                 log.debug("Order is saved with id: {}", order.getId().getValue());
             }
 
-            return order;
         } catch (Exception e) {
             log.error("An error occurred while saving the order", e);
             throw new OrderDomainException("An error occurred while saving the order", e);
@@ -53,5 +53,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Optional<Order> findById(UUID orderId) {
         Optional<OrderEntity> optionalOrderEntity = orderJpaRepository.findById(orderId);
         return optionalOrderEntity.map(orderDataAccessMapper::orderEntityToOrder);
+    }
+
+    @Override
+    public Optional<Order> findByTrackingId(TrackingId trackingId) {
+        return orderJpaRepository.findByTrackingId(trackingId.getValue())
+                .map(orderDataAccessMapper::orderEntityToOrder);
     }
 }

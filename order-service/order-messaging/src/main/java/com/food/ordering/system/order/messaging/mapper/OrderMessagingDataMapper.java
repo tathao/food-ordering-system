@@ -7,6 +7,7 @@ import com.food.ordering.system.order.domain.entity.OrderItem;
 import com.food.ordering.system.order.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.domain.event.OrderPaidEvent;
 import com.food.ordering.system.order.service.dto.message.PaymentResponse;
+import com.food.ordering.system.order.service.dto.message.RestaurantApprovalResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -68,6 +69,19 @@ public class OrderMessagingDataMapper {
         return com.food.ordering.system.kafka.order.avro.model.Product.newBuilder()
                 .setId(productId.toString())
                 .setQuantity(quantity)
+                .build();
+    }
+
+    public RestaurantApprovalResponse approvalResponseAvroModelToApprovalResponse(RestaurantApprovalResponseAvroModel restaurantApprovalResponseAvroModel) {
+        return RestaurantApprovalResponse.builder()
+                .id(restaurantApprovalResponseAvroModel.getId())
+                .sagaId(restaurantApprovalResponseAvroModel.getSagaId())
+                .restaurantId(restaurantApprovalResponseAvroModel.getRestaurantId())
+                .orderId(restaurantApprovalResponseAvroModel.getOrderId())
+                .createdAt(restaurantApprovalResponseAvroModel.getCreatedAt())
+                .orderApprovalStatus(com.food.ordering.system.common.domain.valueobject.OrderApprovalStatus.valueOf(
+                        restaurantApprovalResponseAvroModel.getOrderApprovalStatus().name()))
+                .failureMessages(restaurantApprovalResponseAvroModel.getFailureMessages())
                 .build();
     }
 }

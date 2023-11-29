@@ -29,6 +29,7 @@ public class PaymentMessagingDataMapper {
         return PaymentResponseAvroModel.newBuilder()
                 .setId(UUID.randomUUID().toString())
                 .setSagaId("")
+                .setCustomerId(domainEvent.getPayment().getCustomerId().getValue().toString())
                 .setRestaurantId(domainEvent.getPayment().getRestaurantId().getValue().toString())
                 .setPaymentId(domainEvent.getPayment().getId().getValue().toString())
                 .setPrice(domainEvent.getPayment().getAmount().getAmount())

@@ -1,6 +1,7 @@
 package com.food.ordering.system.order.service.impl;
 
 import com.food.ordering.system.order.service.dto.message.PaymentResponse;
+import com.food.ordering.system.order.service.dto.message.RestaurantApprovalResponse;
 import com.food.ordering.system.order.service.handler.OrderApprovalCommandHandler;
 import com.food.ordering.system.order.service.ports.input.message.listener.payment.OrderApprovalMessageListener;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +16,10 @@ public class OrderApprovalMessageListenerImpl implements OrderApprovalMessageLis
     @Override
     public void orderApprovalToRestaurant(PaymentResponse paymentResponse) {
         orderApprovalCommandHandler.orderApprovalToRestaurant(paymentResponse);
+    }
+
+    @Override
+    public void orderApproved(RestaurantApprovalResponse restaurantApprovalResponse) {
+        orderApprovalCommandHandler.orderApproved(restaurantApprovalResponse);
     }
 }

@@ -3,7 +3,6 @@ package com.food.ordering.system.payment.messaging.listener.kafka;
 import com.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.food.ordering.system.kafka.order.avro.model.PaymentOrderStatus;
 import com.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
-import com.food.ordering.system.kafka.order.avro.model.PaymentStatus;
 import com.food.ordering.system.payment.messaging.mapper.PaymentMessagingDataMapper;
 import com.food.ordering.system.payment.service.PaymentDomainApplicationService;
 import lombok.AllArgsConstructor;

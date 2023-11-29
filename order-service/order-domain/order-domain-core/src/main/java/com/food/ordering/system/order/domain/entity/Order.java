@@ -104,6 +104,13 @@ public class Order extends AggregateRoot<OrderId> {
         }
     }
 
+    public void approve() {
+        if(orderStatus != OrderStatus.PAID) {
+            throw new OrderDomainException("Order is not in correct state for approve operation!");
+        }
+        orderStatus = OrderStatus.APPROVED;
+    }
+
     @Setter
     @Accessors(fluent = true)
     public static final class OrderBuilder {

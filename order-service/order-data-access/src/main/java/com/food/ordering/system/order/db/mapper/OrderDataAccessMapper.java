@@ -26,7 +26,7 @@ public class OrderDataAccessMapper {
         OrderEntity orderEntity = OrderEntity.builder()
                 .id(order.getId().getValue())
                 .customerId(order.getCustomerId().getValue())
-                .restaurantId(order.getCustomerId().getValue())
+                .restaurantId(order.getRestaurantId().getValue())
                 .totalAmount(order.getTotalAmount().getAmount())
                 .trackingId(order.getTrackingId().getValue())
                 .orderStatus(order.getOrderStatus())
@@ -77,6 +77,7 @@ public class OrderDataAccessMapper {
                 .id(item.getId().getValue())
                 .quantity(item.getQuantity())
                 .subTotal(item.getSubTotal().getAmount())
+                .price(item.getPrice().getAmount())
                 .productId(item.getProduct().getId().getValue())
                 .build()).toList();
 

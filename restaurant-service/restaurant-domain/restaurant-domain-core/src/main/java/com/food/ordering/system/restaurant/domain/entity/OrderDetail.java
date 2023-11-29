@@ -5,6 +5,7 @@ import com.food.ordering.system.common.domain.valueobject.Money;
 import com.food.ordering.system.common.domain.valueobject.OrderId;
 import com.food.ordering.system.common.domain.valueobject.OrderStatus;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -12,7 +13,6 @@ import java.util.List;
 
 @Getter
 public class OrderDetail extends BaseEntity<OrderId> {
-
     private OrderStatus orderStatus;
     private Money totalAmount;
     private final List<Product> products;

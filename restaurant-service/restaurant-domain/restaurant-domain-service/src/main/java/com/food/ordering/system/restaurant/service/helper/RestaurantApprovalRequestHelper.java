@@ -4,7 +4,6 @@ import com.food.ordering.system.common.domain.valueobject.OrderId;
 import com.food.ordering.system.restaurant.domain.RestaurantDomainService;
 import com.food.ordering.system.restaurant.domain.entity.Restaurant;
 import com.food.ordering.system.restaurant.domain.event.OrderApprovalEvent;
-import com.food.ordering.system.restaurant.domain.exception.RestaurantDomainException;
 import com.food.ordering.system.restaurant.domain.exception.RestaurantNotFoundException;
 import com.food.ordering.system.restaurant.service.dto.RestaurantApprovalRequest;
 import com.food.ordering.system.restaurant.service.mapper.RestaurantDataMapper;
@@ -28,38 +27,40 @@ import java.util.UUID;
 public class RestaurantApprovalRequestHelper {
 
     private final RestaurantDomainService restaurantDomainService;
+    private final RestaurantDataMapper restaurantDataMapper;
     private final RestaurantRepository restaurantRepository;
-    private final OrderApprovalRepository orderApprovalRepository;
     private final OrderApprovedMessagePublisher orderApprovedMessagePublisher;
     private final OrderRejectedMessagePublisher orderRejectedMessagePublisher;
-    private final RestaurantDataMapper restaurantDataMapper;
-
 
     @Transactional
     public OrderApprovalEvent persistOrderApproval(RestaurantApprovalRequest restaurantApprovalRequest) {
         log.info("Processing restaurant approval for order id: {}", restaurantApprovalRequest.getOrderId());
         List<String> failureMessages = new ArrayList<>();
-        Restaurant restaurant = findRestaurantById(restaurantApprovalRequest);
-        OrderApprovalEvent orderApprovalEvent = restaurantDomainService.validateOrder(
-                restaurant, failureMessages,
-                orderApprovedMessagePublisher,
-                orderRejectedMessagePublisher
-        );
-        orderApprovalRepository.save(restaurant.getOrderApproval());
+        Restaurant restaurant = findRestaurant(restaurantApprovalRequest);
+        OrderApprovalEvent orderApprovalEvent =
+                restaurantDomainService.validateOrder(
+                        restaurant,
+                        failureMessages,
+                        orderApprovedMessagePublisher,
+                        orderRejectedMessagePublisher);
+        restaurantRepository.save(restaurant);
         return orderApprovalEvent;
     }
 
-    private Restaurant findRestaurantById(RestaurantApprovalRequest restaurantApprovalRequest) {
-        Restaurant restaurant = restaurantDataMapper.restaurantApprovalRequestToRestaurant(restaurantApprovalRequest);
-        Restaurant restaurantResult = restaurantRepository.findRestaurantById(restaurantApprovalRequest.getId())
-                .orElseThrow(()->{
-                    log.error("Restaurant with id " + restaurant.getId().getValue() + " not found!");
-                    return new RestaurantNotFoundException("Restaurant with id " + restaurant.getId().getValue() + " not found1");
-                });
-        restaurant.setActive(restaurant.isActive());
-        restaurant.getOrderDetail().setId(new OrderId(
-                UUID.fromString(restaurantApprovalRequest.getOrderId())
-        ));
+    private Restaurant findRestaurant(RestaurantApprovalRequest restaurantApprovalRequest) {
+        Restaurant restaurant = restaurantDataMapper
+                .restaurantApprovalRequestToRestaurant(restaurantApprovalRequest);
+        Optional<Restaurant> restaurantResult = restaurantRepository.findRestaurantInformation(restaurant);
+        if (restaurantResult.isEmpty()) {
+            log.error("Restaurant with id " + restaurant.getId().getValue() + " not found!");
+            throw new RestaurantNotFoundException("Restaurant with id " + restaurant.getId().getValue() +
+                    " not found!");
+        }
+
+        Restaurant restaurantEntity = restaurantResult.get();
+        restaurant.setActive(restaurantEntity.isActive());
+        restaurant.setProducts(restaurantEntity.getProducts());
+        restaurant.getOrderDetail().setId(new OrderId(UUID.fromString(restaurantApprovalRequest.getOrderId())));
 
         return restaurant;
     }

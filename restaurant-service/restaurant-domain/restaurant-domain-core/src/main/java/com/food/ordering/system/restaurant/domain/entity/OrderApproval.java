@@ -22,7 +22,7 @@ public class OrderApproval extends BaseEntity<OrderApprovalId> {
         this.orderApprovalStatus = builder.orderApprovalStatus;
     }
 
-    public static OrderApprovalBuilder builder() {
+    public static OrderApprovalBuilder builder () {
         return new OrderApprovalBuilder();
     }
 

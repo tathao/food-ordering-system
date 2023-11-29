@@ -12,4 +12,6 @@ public interface OrderDomainService {
 
     OrderCreatedEvent validateAndInitiateOrder(final Order order,  DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher);
     OrderPaidEvent validateAndApprovalTheOrder(final Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher);
+
+    void approveOrder(Order order);
 }
