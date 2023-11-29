@@ -20,4 +20,6 @@ public interface OrderApplicationService {
     void orderRejected(RestaurantApprovalResponse restaurantApprovalResponse);
 
     TrackOrderResponse trackOrder(TrackOrderQuery build);
+
+    void paymentCancelled(PaymentResponse paymentResponse);
 }

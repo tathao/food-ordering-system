@@ -4,6 +4,7 @@ import com.food.ordering.system.common.domain.event.publisher.DomainEventPublish
 import com.food.ordering.system.order.domain.OrderDomainService;
 import com.food.ordering.system.order.domain.entity.Order;
 import com.food.ordering.system.order.domain.entity.Product;
+import com.food.ordering.system.order.domain.event.OrderCancelledEvent;
 import com.food.ordering.system.order.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.domain.event.OrderPaidEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,14 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     public void approveOrder(Order order) {
         order.approve();
         log.info("Order with id: {} is approved", order.getId().getValue());
+    }
+
+    @Override
+    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages, DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher) {
+        order.cancel(failureMessages);
+        log.info("Order payment is cancelling for order id: {}", order.getId().getValue());
+        return new OrderCancelledEvent(order, ZonedDateTime.now(ZoneId.of(UTC)),
+                orderCancelledEventDomainEventPublisher);
     }
 
 }

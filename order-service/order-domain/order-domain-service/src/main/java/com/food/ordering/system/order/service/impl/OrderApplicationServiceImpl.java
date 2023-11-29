@@ -7,6 +7,7 @@ import com.food.ordering.system.order.service.dto.message.PaymentResponse;
 import com.food.ordering.system.order.service.dto.message.RestaurantApprovalResponse;
 import com.food.ordering.system.order.service.dto.track.TrackOrderQuery;
 import com.food.ordering.system.order.service.dto.track.TrackOrderResponse;
+import com.food.ordering.system.order.service.handler.OrderCancelCommandHandler;
 import com.food.ordering.system.order.service.handler.OrderCreateCommandHandler;
 import com.food.ordering.system.order.service.handler.OrderTrackCommandHandler;
 import com.food.ordering.system.order.service.ports.input.message.listener.payment.OrderApprovalMessageListener;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 public class OrderApplicationServiceImpl implements OrderApplicationService {
 
     private final OrderCreateCommandHandler orderCreateCommandHandler;
+    private final OrderCancelCommandHandler orderCancelCommandHandler;
     private final OrderTrackCommandHandler orderTrackCommandHandler;
     private final OrderApprovalMessageListener orderApprovalMessageListener;
 
@@ -48,5 +50,10 @@ public class OrderApplicationServiceImpl implements OrderApplicationService {
     @Override
     public TrackOrderResponse trackOrder(TrackOrderQuery build) {
         return orderTrackCommandHandler.trackOrder(build);
+    }
+
+    @Override
+    public void paymentCancelled(PaymentResponse paymentResponse) {
+        orderCancelCommandHandler.cancelOrderPayment(paymentResponse);
     }
 }

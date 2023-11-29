@@ -31,12 +31,16 @@
         <module name="restaurant-messaging" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common-message" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
       <module name="common-application" options="-parameters" />
       <module name="common-domain" options="-parameters" />
+      <module name="common-message" options="-parameters" />
       <module name="food-ordering-system" options="-parameters" />
       <module name="kafka" options="-parameters" />
       <module name="kafka-config-data" options="-parameters" />

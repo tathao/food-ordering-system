@@ -5,6 +5,8 @@ import com.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import com.food.ordering.system.kafka.order.avro.model.PaymentResponseAvroModel;
 import com.food.ordering.system.kafka.order.avro.model.PaymentStatus;
 import com.food.ordering.system.payment.domain.event.PaymentCompletedEvent;
+import com.food.ordering.system.payment.domain.event.PaymentEvent;
+import com.food.ordering.system.payment.domain.event.PaymentFailedEvent;
 import com.food.ordering.system.payment.service.dto.PaymentRequest;
 import org.springframework.stereotype.Component;
 
@@ -26,17 +28,26 @@ public class PaymentMessagingDataMapper {
     }
 
     public PaymentResponseAvroModel paymentCompletedEventToPaymentResponseAvroModel(PaymentCompletedEvent domainEvent) {
+        return mapPaymentEventToPaymentResponseAvroModel(domainEvent);
+    }
+
+    public PaymentResponseAvroModel
+    paymentFailedEventToPaymentResponseAvroModel(PaymentFailedEvent domainEvent) {
+        return mapPaymentEventToPaymentResponseAvroModel(domainEvent);
+    }
+
+    private PaymentResponseAvroModel mapPaymentEventToPaymentResponseAvroModel(PaymentEvent paymentEvent) {
         return PaymentResponseAvroModel.newBuilder()
                 .setId(UUID.randomUUID().toString())
                 .setSagaId("")
-                .setCustomerId(domainEvent.getPayment().getCustomerId().getValue().toString())
-                .setRestaurantId(domainEvent.getPayment().getRestaurantId().getValue().toString())
-                .setPaymentId(domainEvent.getPayment().getId().getValue().toString())
-                .setPrice(domainEvent.getPayment().getAmount().getAmount())
-                .setOrderId(domainEvent.getPayment().getOrderId().getValue().toString())
-                .setCreatedAt(domainEvent.getPayment().getCreatedAt().toInstant())
-                .setPaymentStatus(PaymentStatus.valueOf(domainEvent.getPayment().getPaymentStatus().name()))
-                .setFailureMessages(domainEvent.getFailureMessages())
+                .setCustomerId(paymentEvent.getPayment().getCustomerId().getValue().toString())
+                .setRestaurantId(paymentEvent.getPayment().getRestaurantId().getValue().toString())
+                .setPaymentId(paymentEvent.getPayment().getId().getValue().toString())
+                .setPrice(paymentEvent.getPayment().getAmount().getAmount())
+                .setOrderId(paymentEvent.getPayment().getOrderId().getValue().toString())
+                .setCreatedAt(paymentEvent.getCreatedAt().toInstant())
+                .setPaymentStatus(PaymentStatus.valueOf(paymentEvent.getPayment().getPaymentStatus().name()))
+                .setFailureMessages(paymentEvent.getFailureMessages())
                 .build();
     }
 }

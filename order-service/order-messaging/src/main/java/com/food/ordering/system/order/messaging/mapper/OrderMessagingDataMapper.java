@@ -4,6 +4,7 @@ import com.food.ordering.system.common.domain.valueobject.PaymentStatus;
 import com.food.ordering.system.kafka.order.avro.model.*;
 import com.food.ordering.system.order.domain.entity.Order;
 import com.food.ordering.system.order.domain.entity.OrderItem;
+import com.food.ordering.system.order.domain.event.OrderCancelledEvent;
 import com.food.ordering.system.order.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.domain.event.OrderPaidEvent;
 import com.food.ordering.system.order.service.dto.message.PaymentResponse;
@@ -82,6 +83,19 @@ public class OrderMessagingDataMapper {
                 .orderApprovalStatus(com.food.ordering.system.common.domain.valueobject.OrderApprovalStatus.valueOf(
                         restaurantApprovalResponseAvroModel.getOrderApprovalStatus().name()))
                 .failureMessages(restaurantApprovalResponseAvroModel.getFailureMessages())
+                .build();
+    }
+
+    public PaymentRequestAvroModel orderCancelledEventToPaymentRequestAvroModel(OrderCancelledEvent orderCancelledEvent) {
+        Order order = orderCancelledEvent.getOrder();
+        return PaymentRequestAvroModel.newBuilder()
+                .setId(UUID.randomUUID().toString())
+                .setSagaId("")
+                .setCustomerId(order.getCustomerId().getValue().toString())
+                .setOrderId(order.getId().getValue().toString())
+                .setPrice(order.getTotalAmount().getAmount())
+                .setCreateAt(orderCancelledEvent.getCreatedAt().toInstant())
+                .setPaymentOrderStatus(PaymentOrderStatus.CANCELLED)
                 .build();
     }
 }
