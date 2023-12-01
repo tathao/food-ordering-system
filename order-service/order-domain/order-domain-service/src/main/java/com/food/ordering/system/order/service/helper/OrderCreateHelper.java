@@ -28,15 +28,13 @@ public class OrderCreateHelper {
     private final OrderDataMapper orderDataMapper;
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
-    private final OrderCreatePaymentRequestMessagePublisher orderCreatedEventDomainEventPublisher;
 
 
     @Transactional
     public OrderCreatedEvent persistOrder(CreateOrderRequest createOrderRequest) {
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderRequest);
 
-        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order,
-                orderCreatedEventDomainEventPublisher);
+        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order);
         orderRepository.saveOrder(order);
         log.info("Order is created with id: {}", orderCreatedEvent.getOrder().getId().getValue());
         return orderCreatedEvent;

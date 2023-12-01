@@ -10,11 +10,10 @@ import java.util.List;
 
 public interface OrderDomainService {
 
-    OrderCreatedEvent validateAndInitiateOrder(final Order order,  DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher);
-    OrderPaidEvent payOrder(final Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher);
+    OrderCreatedEvent validateAndInitiateOrder(final Order order);
+    OrderPaidEvent payOrder(final Order order);
 
-    OrderCancelledEvent cancelOrderPayment(final Order order, List<String> failureMessages,
-                                           DomainEventPublisher<OrderCancelledEvent>orderCancelledEventDomainEventPublisher);
+    OrderCancelledEvent cancelOrderPayment(final Order order, List<String> failureMessages);
 
     void approveOrder(Order order);
 
