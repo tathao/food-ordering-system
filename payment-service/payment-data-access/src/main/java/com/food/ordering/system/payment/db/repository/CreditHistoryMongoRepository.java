@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CreditHistoryJpaRepository extends MongoRepository<CreditHistoryEntity, UUID> {
+public interface CreditHistoryMongoRepository extends MongoRepository<CreditHistoryEntity, UUID> {
 
     Optional<List<CreditHistoryEntity>> findAllByCustomerId(UUID customerId);
 }

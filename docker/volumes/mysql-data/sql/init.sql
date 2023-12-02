@@ -26,6 +26,26 @@ CREATE table if not exists order_approval (
 	FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
 );
 
+CREATE  table if not exists restaurant_order_outbox (
+    id binary(16) PRIMARY KEY,
+    saga_id binary(16) NOT NULL,
+    created_at timestamp NOT NULL,
+    proccessed_at timestamp,
+    type varchar(50) NOT NULL,
+    payload json NOT NULL,
+    outbox_status enum('STARTED', 'COMPLETED', 'FAILED') NOT NULL,
+    approval_status enum('APPROVED', 'REJECTED') NOT NULL,
+    version int NOT NULL
+);
+
+CREATE INDEX restaurant_order_outbox_saga_status
+    ON restaurant_db.restaurant_order_outbox
+        (type, approval_status);
+
+CREATE UNIQUE INDEX restaurant_order_outbox_saga_id
+    ON restaurant_db.restaurant_order_outbox
+        (type, saga_id, approval_status, outbox_status);
+
 INSERT INTO restaurant_db.restaurant(id, name, active)
 	VALUES(UUID_TO_BIN('d215b5f8-0249-4dc5-89a3-51fd148cfb45'),'Rosetta', true),
 	(UUID_TO_BIN('d215b5f8-0249-4dc5-89a3-51fd148cfb24'),'Stonehenge', false);

@@ -18,7 +18,6 @@ import static com.food.ordering.system.common.domain.constant.DomainConstant.UTC
 public class Payment extends AggregateRoot<PaymentId> {
     private final OrderId orderId;
     private final CustomerId customerId;
-    private final RestaurantId restaurantId;
     private final Money amount;
 
     private PaymentStatus paymentStatus;
@@ -50,7 +49,7 @@ public class Payment extends AggregateRoot<PaymentId> {
         this.amount = builder.amount;
         this.paymentStatus = builder.paymentStatus;
         this.createdAt = builder.createdAt;
-        this.restaurantId = builder.restaurantId;
+
     }
 
     @Setter
@@ -59,7 +58,6 @@ public class Payment extends AggregateRoot<PaymentId> {
         private PaymentId paymentId;
         private OrderId orderId;
         private CustomerId customerId;
-        private RestaurantId restaurantId;
         private Money amount;
         private PaymentStatus paymentStatus;
         private ZonedDateTime createdAt;

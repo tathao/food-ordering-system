@@ -8,6 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CreditJpaRepository extends MongoRepository<CreditEntity, UUID> {
+public interface CreditMongoRepository extends MongoRepository<CreditEntity, UUID> {
     Optional<CreditEntity> findByCustomerId(UUID customerId);
 }
