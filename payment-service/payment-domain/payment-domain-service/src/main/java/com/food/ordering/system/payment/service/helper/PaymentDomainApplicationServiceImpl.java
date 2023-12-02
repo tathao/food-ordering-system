@@ -30,6 +30,11 @@ public class PaymentDomainApplicationServiceImpl implements PaymentDomainApplica
     }
 
     @Override
+    public void cancelledPayment(PaymentRequest paymentRequest) {
+        paymentRequestMessageListener.cancelledPayment(paymentRequest);
+    }
+
+    @Override
     public String creditPayment(CustomerRequest customerRequest) {
         Credit credit = Credit.builder()
                 .creditEntryId(new CreditId(UUID.randomUUID()))

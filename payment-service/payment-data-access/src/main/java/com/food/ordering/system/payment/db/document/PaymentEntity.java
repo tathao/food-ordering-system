@@ -29,5 +29,6 @@ public class PaymentEntity {
     @Field(name = "payment_status", targetType = FieldType.STRING)
     private String paymentStatus;
     @CreatedDate
+    @Field(name = "created_at")
     private Date createdAt;
 }

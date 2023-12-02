@@ -20,7 +20,7 @@ public class OrderApprovalEntity {
     @Column(name = "order_id")
     private UUID orderId;
     @Enumerated(EnumType.STRING)
-    @Column(name = "approoval_status")
+    @Column(name = "approval_status")
     private OrderApprovalStatus orderApprovalStatus;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")

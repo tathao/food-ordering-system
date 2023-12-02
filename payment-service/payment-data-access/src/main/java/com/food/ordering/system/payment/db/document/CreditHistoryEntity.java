@@ -15,7 +15,6 @@ import java.util.UUID;
 @Document(collection = "credit_histories")
 public class CreditHistoryEntity {
     @Id
-    @Field(name = "id")
     private UUID id;
     @Field(name = "customer_id")
     private UUID customerId;

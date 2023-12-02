@@ -8,6 +8,7 @@ import com.food.ordering.system.payment.domain.event.PaymentCompletedEvent;
 import com.food.ordering.system.payment.domain.event.PaymentEvent;
 import com.food.ordering.system.payment.domain.event.PaymentFailedEvent;
 import com.food.ordering.system.payment.service.dto.PaymentRequest;
+import com.food.ordering.system.payment.service.outbox.model.OrderEventPayload;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -20,34 +21,24 @@ public class PaymentMessagingDataMapper {
                 .sagaId(paymentRequestAvroModel.getSagaId())
                 .customerId(paymentRequestAvroModel.getCustomerId())
                 .orderId(paymentRequestAvroModel.getOrderId())
-                .restaurantId(paymentRequestAvroModel.getRestaurantId())
                 .amount(paymentRequestAvroModel.getPrice())
                 .createdAt(paymentRequestAvroModel.getCreateAt())
                 .paymentOrderStatus(PaymentOrderStatus.valueOf(paymentRequestAvroModel.getPaymentOrderStatus().name()))
                 .build();
     }
 
-    public PaymentResponseAvroModel paymentCompletedEventToPaymentResponseAvroModel(PaymentCompletedEvent domainEvent) {
-        return mapPaymentEventToPaymentResponseAvroModel(domainEvent);
-    }
-
-    public PaymentResponseAvroModel
-    paymentFailedEventToPaymentResponseAvroModel(PaymentFailedEvent domainEvent) {
-        return mapPaymentEventToPaymentResponseAvroModel(domainEvent);
-    }
-
-    private PaymentResponseAvroModel mapPaymentEventToPaymentResponseAvroModel(PaymentEvent paymentEvent) {
+    public PaymentResponseAvroModel orderEventPayloadToPaymentResponseAvroModel(String sagaId,
+                                                                                OrderEventPayload orderEventPayload) {
         return PaymentResponseAvroModel.newBuilder()
                 .setId(UUID.randomUUID().toString())
-                .setSagaId("")
-                .setCustomerId(paymentEvent.getPayment().getCustomerId().getValue().toString())
-                .setRestaurantId(paymentEvent.getPayment().getRestaurantId().getValue().toString())
-                .setPaymentId(paymentEvent.getPayment().getId().getValue().toString())
-                .setPrice(paymentEvent.getPayment().getAmount().getAmount())
-                .setOrderId(paymentEvent.getPayment().getOrderId().getValue().toString())
-                .setCreatedAt(paymentEvent.getCreatedAt().toInstant())
-                .setPaymentStatus(PaymentStatus.valueOf(paymentEvent.getPayment().getPaymentStatus().name()))
-                .setFailureMessages(paymentEvent.getFailureMessages())
+                .setSagaId(sagaId)
+                .setPaymentId(orderEventPayload.getPaymentId())
+                .setCustomerId(orderEventPayload.getCustomerId())
+                .setOrderId(orderEventPayload.getOrderId())
+                .setPrice(orderEventPayload.getPrice())
+                .setCreatedAt(orderEventPayload.getCreatedAt().toInstant())
+                .setPaymentStatus(PaymentStatus.valueOf(orderEventPayload.getPaymentStatus()))
+                .setFailureMessages(orderEventPayload.getFailureMessages())
                 .build();
     }
 }

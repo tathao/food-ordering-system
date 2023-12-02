@@ -3,7 +3,7 @@ package com.food.ordering.system.payment.db.adapter;
 import com.food.ordering.system.common.domain.valueobject.CustomerId;
 import com.food.ordering.system.payment.db.document.CreditHistoryEntity;
 import com.food.ordering.system.payment.db.mapper.PaymentDataAccessMapper;
-import com.food.ordering.system.payment.db.repository.CreditHistoryJpaRepository;
+import com.food.ordering.system.payment.db.repository.CreditHistoryMongoRepository;
 import com.food.ordering.system.payment.domain.entity.CreditHistory;
 import com.food.ordering.system.payment.service.ports.output.repository.CreditHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,17 +15,17 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CreditHistoryRepositoryImpl implements CreditHistoryRepository {
-    private final CreditHistoryJpaRepository creditHistoryJpaRepository;
+    private final CreditHistoryMongoRepository creditHistoryMongoRepository;
     private final PaymentDataAccessMapper paymentDataAccessMapper;
     @Override
     public void save(CreditHistory creditHistory) {
-        paymentDataAccessMapper.creditHistoryEntityToCreditHistory(creditHistoryJpaRepository.save(paymentDataAccessMapper
+        paymentDataAccessMapper.creditHistoryEntityToCreditHistory(creditHistoryMongoRepository.save(paymentDataAccessMapper
                 .creditHistoryToCreditHistoryEntity(creditHistory)));
     }
 
     @Override
     public Optional<List<CreditHistory>> findAllByCustomerId(CustomerId customerId) {
-        Optional<List<CreditHistoryEntity>> optionalCreditHistoryEntities = creditHistoryJpaRepository.findAllByCustomerId(customerId.getValue());
+        Optional<List<CreditHistoryEntity>> optionalCreditHistoryEntities = creditHistoryMongoRepository.findAllByCustomerId(customerId.getValue());
         return optionalCreditHistoryEntities.map(paymentDataAccessMapper::creditHistoryEntitiesToCreditHistories);
     }
 }

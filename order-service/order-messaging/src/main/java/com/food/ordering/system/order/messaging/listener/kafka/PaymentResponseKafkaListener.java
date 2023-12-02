@@ -3,10 +3,12 @@ package com.food.ordering.system.order.messaging.listener.kafka;
 import com.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.food.ordering.system.kafka.order.avro.model.PaymentResponseAvroModel;
 import com.food.ordering.system.kafka.order.avro.model.PaymentStatus;
+import com.food.ordering.system.order.domain.exception.OrderNotFoundException;
 import com.food.ordering.system.order.messaging.mapper.OrderMessagingDataMapper;
 import com.food.ordering.system.order.service.OrderApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -35,11 +37,21 @@ public class PaymentResponseKafkaListener implements KafkaConsumer<PaymentRespon
                 partitions.toString(),
                 offsets.toString());
         messages.forEach(paymentResponseAvroModel -> {
-            if (PaymentStatus.COMPLETED == paymentResponseAvroModel.getPaymentStatus()) {
-                orderApplicationService.orderApprovalToRestaurant(orderMessagingDataMapper.paymentAvroResponseModelToPaymentResponse(paymentResponseAvroModel));
-            }else {
-                log.info("Processing unsuccessful payment for order id: {}", paymentResponseAvroModel.getOrderId());
-                orderApplicationService.paymentCancelled(orderMessagingDataMapper.paymentAvroResponseModelToPaymentResponse(paymentResponseAvroModel));
+            try {
+                if (PaymentStatus.COMPLETED == paymentResponseAvroModel.getPaymentStatus()) {
+                    orderApplicationService.orderApprovalToRestaurant(orderMessagingDataMapper.paymentAvroResponseModelToPaymentResponse(paymentResponseAvroModel));
+                }else {
+                    log.info("Processing unsuccessful payment for order id: {}", paymentResponseAvroModel.getOrderId());
+                    orderApplicationService.paymentCancelled(orderMessagingDataMapper.paymentAvroResponseModelToPaymentResponse(paymentResponseAvroModel));
+                }
+            } catch (OptimisticLockingFailureException e) {
+                //NO-OP for optimistic lock. This mean another thread finished the work. do not throw error
+                // to prevent reading the data from kafka again!
+                log.error("Caught optimistic locking exception is PaymentResponseKafkaListener for order id: {}",
+                        paymentResponseAvroModel.getOrderId());
+            } catch (OrderNotFoundException e) {
+                //NO-OP for OrderNotFoundException
+                log.error("No order found for order id: {}", paymentResponseAvroModel.getOrderId());
             }
         });
     }

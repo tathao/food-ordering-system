@@ -16,7 +16,6 @@ import java.util.UUID;
 public class CreditEntity {
 
     @Id
-    @Field(name = "id")
     private UUID id;
     @Field(name = "customer_id")
     private UUID customerId;
