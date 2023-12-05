@@ -1,7 +1,13 @@
-DROP SCHEMA IF EXISTS "order" CASCADE;
-
+CREATE DATABASE "ms_order";
+CREATE USER ms_order WITH ENCRYPTED PASSWORD '123456';
+GRANT ALL PRIVILEGES ON DATABASE ms_order TO ms_order;
+ALTER ROLE ms_order
+    SUPERUSER
+    CREATEDB
+    CREATEROLE;
+\connect "ms_order";
 CREATE SCHEMA IF NOT EXISTS "order"
-    AUTHORIZATION postgres;
+    AUTHORIZATION ms_order;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -108,16 +114,25 @@ CREATE UNIQUE INDEX "restaurant_approval_outbox_saga_id"
     ON "order".restaurant_approval_outbox
         (type, saga_id, saga_status);
 
-CREATE SCHEMA IF NOT EXISTS "order_schema"
-    AUTHORIZATION postgres;
+CREATE DATABASE "ms_customer";
+CREATE USER ms_customer WITH ENCRYPTED PASSWORD '123456';
+GRANT ALL PRIVILEGES ON DATABASE ms_customer TO ms_customer;
+ALTER ROLE ms_customer
+    SUPERUSER
+    CREATEDB
+    CREATEROLE;
+\connect "ms_customer";
+CREATE SCHEMA IF NOT EXISTS "customer"
+    AUTHORIZATION ms_customer;
 
-CREATE TABLE IF NOT EXISTS "order_schema"."order_table" (
-    id Serial PRIMARY KEY,
-    prod_id SmallInt NOT NULL,
-    quantity SmallInt NOT NULL,
-    order_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    status Varchar(20),
-    total_amount BigInt NOT NULL
+CREATE TABLE IF NOT EXISTS "customer".customer (
+    id uuid NOT NULL ,
+    user_name character varying COLLATE pg_catalog."default" NOT NULL ,
+    first_name character varying COLLATE pg_catalog."default" NOT NULL ,
+    last_name character varying COLLATE pg_catalog."default" NOT NULL ,
+    amount  numeric(10, 2) NOT NULL,
+    active boolean NOT NULL ,
+    CONSTRAINT customer_pkey PRIMARY KEY (id)
 );
 
 CREATE DATABASE "keycloak";

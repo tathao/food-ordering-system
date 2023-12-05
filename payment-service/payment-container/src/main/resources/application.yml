@@ -1,5 +1,5 @@
 server:
-  port: 8182
+  port: 8186
 
 logging:
   level:
@@ -19,6 +19,7 @@ spring:
 payment-service:
   payment-request-topic-name: payment-request
   payment-response-topic-name: payment-response
+  customer-request-topic-name: customer-request
   outbox-scheduler-fixed-rate: 10000
   outbox-scheduler-initial-delay: 10000
 
@@ -44,6 +45,7 @@ kafka-consumer-config:
   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
   payment-consumer-group-id: payment-topic-consumer
+  customer-consumer-group-id: customer-topic-consumer
   auto-offset-reset: earliest
   specific-avro-reader-key: specific.avro.reader
   specific-avro-reader: true
