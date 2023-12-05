@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CustomerRequest {
     private String customerId;
+    private String userName;
     private String firstName;
     private String lastName;
     private BigDecimal amount;
+    private boolean active;
 }

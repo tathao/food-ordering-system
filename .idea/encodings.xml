@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-container/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-data-access/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-domain/customer-domain-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-domain/customer-domain-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-domain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/customer-messaging/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/customer-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/common-application/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/common-domain/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/common-message/src/main/java" charset="UTF-8" />
@@ -24,6 +35,7 @@
     <file url="file://$PROJECT_DIR$/order-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/outbox/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/payment-application/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/payment-service/payment-application/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/payment-container/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/payment-data-access/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/payment-service/payment-domain/payment-domain-core/src/main/java" charset="UTF-8" />

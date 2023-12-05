@@ -63,9 +63,10 @@ public class PaymentDataAccessMapper {
         return CreditEntity.builder()
                 .id(credit.getId().getValue())
                 .customerId(credit.getCustomerId().getValue())
+                .userName(credit.getUserName())
                 .firstName(credit.getFirstName())
                 .lastName(credit.getLastName())
-                .active(credit.getAcrive())
+                .active(credit.getActive())
                 .totalCreditAmount(credit.getTotalCreditAmount().getAmount())
                 .build();
     }

@@ -21,6 +21,8 @@ public class CreditEntity {
     private UUID customerId;
     @Field(name = "first_name")
     private String firstName;
+    @Field(name = "user_name")
+    private String userName;
     @Field(name = "last_name")
     private String lastName;
     @Field(name = "active")
