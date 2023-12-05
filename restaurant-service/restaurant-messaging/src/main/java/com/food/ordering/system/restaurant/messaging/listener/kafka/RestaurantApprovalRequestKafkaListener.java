@@ -4,8 +4,8 @@ import com.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.food.ordering.system.kafka.order.avro.model.RestaurantApprovalRequestAvroModel;
 import com.food.ordering.system.restaurant.domain.exception.RestaurantNotFoundException;
 import com.food.ordering.system.restaurant.messaging.mapper.RestaurantMessagingDataMapper;
-import com.food.ordering.system.restaurant.service.RestaurantDomainApplicationService;
 import com.food.ordering.system.restaurant.service.exception.RestaurantApplicationServiceException;
+import com.food.ordering.system.restaurant.service.helper.RestaurantApprovalRequestHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantApprovalRequestKafkaListener implements KafkaConsumer<RestaurantApprovalRequestAvroModel> {
 
-    private final RestaurantDomainApplicationService restaurantDomainApplicationService;
+    private final RestaurantApprovalRequestHelper restaurantApprovalRequestHelper;
     private final RestaurantMessagingDataMapper restaurantMessagingDataMapper;
 
     @Override
@@ -44,7 +44,7 @@ public class RestaurantApprovalRequestKafkaListener implements KafkaConsumer<Res
         messages.forEach(restaurantApprovalRequestAvroModel -> {
             try {
                 log.info("Processing order approval for order id: {}", restaurantApprovalRequestAvroModel.getOrderId());
-                restaurantDomainApplicationService.approveOrder(restaurantMessagingDataMapper.
+                restaurantApprovalRequestHelper.persistOrderApproval(restaurantMessagingDataMapper.
                         restaurantApprovalRequestAvroModelToRestaurantApproval(restaurantApprovalRequestAvroModel));
             } catch (DataAccessException e) {
                 SQLException sqlException = (SQLException) e.getRootCause();

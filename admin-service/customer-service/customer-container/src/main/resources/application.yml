@@ -1,8 +1,8 @@
 server:
-  port: 8184
+  port: 8189
 
 customer-service:
-  customer-topic-name: customer
+  customer-topic-name: customer-request
 
 spring:
   jpa:

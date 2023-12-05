@@ -1,6 +1,6 @@
 package com.food.ordering.system.customer.application.rest.api;
 
-import com.food.ordering.system.customer.service.CustomerApplicationService;
+import com.food.ordering.system.customer.service.CustomerCreatedService;
 import com.food.ordering.system.customer.service.dto.create.CreateCustomerRequest;
 import com.food.ordering.system.customer.service.dto.create.CreateCustomerResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final CustomerApplicationService customerApplicationService;
+    private final CustomerCreatedService customerCreatedService;
 
     @PostMapping
     public ResponseEntity<CreateCustomerResponse> createCustomer(@RequestBody CreateCustomerRequest
                                                                          createCustomerCommand) {
         log.info("Creating customer with username: {}", createCustomerCommand.getUsername());
-        CreateCustomerResponse response = customerApplicationService.createCustomer(createCustomerCommand);
+        CreateCustomerResponse response = customerCreatedService.createCustomer(createCustomerCommand);
         return ResponseEntity.ok(response);
     }
 }

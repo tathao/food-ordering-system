@@ -6,8 +6,7 @@ import com.food.ordering.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import com.food.ordering.system.payment.domain.exception.PaymentDomainException;
 import com.food.ordering.system.payment.domain.exception.PaymentNotFoundException;
 import com.food.ordering.system.payment.messaging.mapper.PaymentMessagingDataMapper;
-import com.food.ordering.system.payment.service.PaymentDomainApplicationService;
-import com.food.ordering.system.payment.service.exception.PaymentDomainServiceException;
+import com.food.ordering.system.payment.service.ports.input.message.listener.PaymentRequestMessageListener;
 import com.mongodb.MongoWriteException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +14,16 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
-@Component
+@Service
 @AllArgsConstructor
 public class PaymentRequestKafkaListener implements KafkaConsumer<PaymentRequestAvroModel> {
 
-    private final PaymentDomainApplicationService paymentDomainApplicationService;
+    private final PaymentRequestMessageListener paymentRequestMessageListener;
     private final PaymentMessagingDataMapper paymentMessagingDataMapper;
 
     @Override
@@ -43,13 +42,13 @@ public class PaymentRequestKafkaListener implements KafkaConsumer<PaymentRequest
         messages.forEach(paymentRequestAvroModel -> {
             try {
                 if (PaymentOrderStatus.PENDING.equals(paymentRequestAvroModel.getPaymentOrderStatus())) {
-                    paymentDomainApplicationService.completePayment(
+                    paymentRequestMessageListener.completePayment(
                             paymentMessagingDataMapper
                                     .paymentRequestAvroModelToPaymentRequest(paymentRequestAvroModel)
                     );
                 } else {
                     log.info("Cancelling payment for order id: {}", paymentRequestAvroModel.getOrderId());
-                    paymentDomainApplicationService.cancelledPayment(
+                    paymentRequestMessageListener.cancelledPayment(
                             paymentMessagingDataMapper.paymentRequestAvroModelToPaymentRequest(paymentRequestAvroModel)
                     );
                 }

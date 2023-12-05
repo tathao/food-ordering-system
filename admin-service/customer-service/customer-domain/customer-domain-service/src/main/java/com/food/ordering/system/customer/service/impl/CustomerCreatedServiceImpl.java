@@ -1,6 +1,6 @@
 package com.food.ordering.system.customer.service.impl;
 
-import com.food.ordering.system.customer.service.CustomerApplicationService;
+import com.food.ordering.system.customer.service.CustomerCreatedService;
 import com.food.ordering.system.customer.service.dto.create.CreateCustomerRequest;
 import com.food.ordering.system.customer.service.dto.create.CreateCustomerResponse;
 import com.food.ordering.system.customer.service.helper.CustomerCreateHelper;
@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Service
 @RequiredArgsConstructor
-public class CustomerApplicationServiceImpl implements CustomerApplicationService {
+public class CustomerCreatedServiceImpl implements CustomerCreatedService {
     private final CustomerCreateHelper customerCreateHelper;
     private final CustomerDataMapper customerDataMapper;
     private final CustomerMessagePublisher customerMessagePublisher;

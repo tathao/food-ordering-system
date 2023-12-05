@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "customers", schema = "food_ordering_system")
+@Table(name = "customer", schema = "customer")
 @Entity
 public class CustomerEntity {
 

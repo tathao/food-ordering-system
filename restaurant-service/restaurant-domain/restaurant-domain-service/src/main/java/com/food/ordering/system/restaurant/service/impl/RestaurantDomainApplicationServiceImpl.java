@@ -1,6 +1,5 @@
 package com.food.ordering.system.restaurant.service.impl;
 
-import com.food.ordering.system.restaurant.service.RestaurantDomainApplicationService;
 import com.food.ordering.system.restaurant.service.dto.RestaurantApprovalRequest;
 import com.food.ordering.system.restaurant.service.ports.input.message.listener.RestaurantApprovalRequestMessageListener;
 import lombok.RequiredArgsConstructor;

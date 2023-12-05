@@ -17,7 +17,6 @@
         <module name="order-messaging" />
         <module name="common-domain" />
         <module name="order-application" />
-        <module name="payment-application" />
         <module name="customer-container" />
         <module name="restaurant-domain-core" />
         <module name="order-domain-core" />
@@ -42,6 +41,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common-message" target="17" />
+      <module name="payment-application" target="17" />
       <module name="product-service" target="17" />
     </bytecodeTargetLevel>
   </component>

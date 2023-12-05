@@ -5,6 +5,6 @@ import com.food.ordering.system.customer.service.dto.create.CreateCustomerRespon
 
 import javax.validation.Valid;
 
-public interface CustomerApplicationService {
+public interface CustomerCreatedService {
     CreateCustomerResponse createCustomer(@Valid CreateCustomerRequest createCustomerCommand);
 }

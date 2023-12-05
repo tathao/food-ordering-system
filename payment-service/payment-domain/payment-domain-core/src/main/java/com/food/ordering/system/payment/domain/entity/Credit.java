@@ -12,9 +12,11 @@ import lombok.experimental.Accessors;
 public class Credit extends BaseEntity<CreditId> {
 
     private final CustomerId customerId;
+    private final String userName;
     private final String firstName;
     private final String lastName;
-    private Boolean acrive;
+    @Setter
+    private Boolean active;
     private Money totalCreditAmount;
 
     public void addCreditAmount(Money amount) {
@@ -27,11 +29,12 @@ public class Credit extends BaseEntity<CreditId> {
 
     private Credit(final CreditBuilder builder) {
         super.setId(builder.creditEntryId);
+        this.userName = builder.userName;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.customerId = builder.customerId;
         this.totalCreditAmount = builder.totalCreditAmount;
-        this.acrive = builder.active;
+        this.active = builder.active;
     }
 
     public static CreditBuilder builder() {
@@ -43,6 +46,7 @@ public class Credit extends BaseEntity<CreditId> {
     public static final class CreditBuilder {
         private CreditId creditEntryId;
         private CustomerId customerId;
+        private String userName;
         private String firstName;
         private String lastName;
         private Boolean active;
